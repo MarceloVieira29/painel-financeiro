@@ -1,86 +1,66 @@
-let lancamentos = JSON.parse(localStorage.getItem('lancamentos')) || [];
-let graficoPizza, graficoLinha;
+let lancamentos = JSON.parse(localStorage.getItem("lancamentos")) || [];
 
-function showTab(tabId){
-  document.getElementById('lancamentos').style.display = "none";
-  document.getElementById('relatorio').style.display = "none";
-  document.getElementById(tabId).style.display = "block";
-  document.querySelectorAll('.nav-link').forEach(el=>el.classList.remove('active'));
-  document.querySelector(`[onclick="showTab('${tabId}')"]`).classList.add('active');
+document.getElementById("form-lancamento").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const data = document.getElementById("data").value;
+    const descricao = document.getElementById("descricao").value;
+    const valor = parseFloat(document.getElementById("valor").value);
+    const tipo = document.getElementById("tipo").value;
+
+    lancamentos.push({ data, descricao, valor, tipo });
+    localStorage.setItem("lancamentos", JSON.stringify(lancamentos));
+    atualizarTabela();
+    atualizarRelatorios();
+    atualizarGrafico();
+    this.reset();
+});
+
+function atualizarTabela() {
+    const tbody = document.querySelector("#tabela-lancamentos tbody");
+    tbody.innerHTML = "";
+    lancamentos.forEach(l => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${l.data}</td><td>${l.descricao}</td><td>R$ ${l.valor.toFixed(2)}</td><td>${l.tipo}</td>`;
+        tbody.appendChild(tr);
+    });
 }
 
-function adicionarLancamento(){
-  const data = document.getElementById('data').value;
-  const tipo = document.getElementById('tipo').value;
-  const categoria = document.getElementById('categoria').value;
-  const valor = parseFloat(document.getElementById('valor').value);
-  if(!data || !categoria || isNaN(valor)){ alert("Preencha todos os campos!"); return; }
-  lancamentos.push({data,tipo,categoria,valor});
-  localStorage.setItem('lancamentos',JSON.stringify(lancamentos));
-  atualizarTabela();
-  atualizarResumo();
-  carregarGraficos();
-  document.getElementById('data').value=''; document.getElementById('categoria').value=''; document.getElementById('valor').value='';
+function atualizarRelatorios() {
+    const totalEntradas = lancamentos.filter(l => l.tipo === "entrada").reduce((acc, l) => acc + l.valor, 0);
+    const totalSaidas = lancamentos.filter(l => l.tipo === "saida").reduce((acc, l) => acc + l.valor, 0);
+    const saldo = totalEntradas - totalSaidas;
+
+    document.getElementById("total-entradas").textContent = "R$ " + totalEntradas.toFixed(2);
+    document.getElementById("total-saidas").textContent = "R$ " + totalSaidas.toFixed(2);
+    document.getElementById("saldo-atual").textContent = "R$ " + saldo.toFixed(2);
+    document.getElementById("qtd-lancamentos").textContent = lancamentos.length;
 }
 
-function atualizarTabela(){
-  const tbody = document.getElementById('tabela');
-  tbody.innerHTML='';
-  lancamentos.forEach((l,i)=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=`<td>${l.data}</td><td>${l.tipo}</td><td>${l.categoria}</td><td>R$ ${l.valor.toFixed(2)}</td><td><button class="btn btn-sm btn-danger" onclick="excluir(${i})">❌</button></td>`;
-    tbody.appendChild(tr);
-  });
+let grafico;
+function atualizarGrafico() {
+    const ctx = document.getElementById("grafico").getContext("2d");
+    const entradas = lancamentos.filter(l => l.tipo === "entrada").reduce((acc, l) => acc + l.valor, 0);
+    const saidas = lancamentos.filter(l => l.tipo === "saida").reduce((acc, l) => acc + l.valor, 0);
+
+    if (grafico) grafico.destroy();
+    grafico = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+            labels: ["Entradas", "Saídas"],
+            datasets: [{
+                data: [entradas, saidas],
+                backgroundColor: ["#28a745", "#dc3545"]
+            }]
+        }
+    });
 }
 
-function atualizarResumo(){
-  const totalReceitas = lancamentos.filter(l=>l.tipo==='receita').reduce((a,b)=>a+b.valor,0);
-  const totalDespesas = lancamentos.filter(l=>l.tipo==='despesa').reduce((a,b)=>a+b.valor,0);
-  const saldo = totalReceitas-totalDespesas;
-  document.getElementById('totalReceitas').textContent = "R$ "+totalReceitas.toLocaleString('pt-BR');
-  document.getElementById('totalDespesas').textContent = "R$ "+totalDespesas.toLocaleString('pt-BR');
-  document.getElementById('saldo').textContent = "R$ "+saldo.toLocaleString('pt-BR');
+function showTab(tabId) {
+    document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
+    document.getElementById(tabId).classList.add("active");
+    if (tabId === "relatorios") atualizarRelatorios();
+    if (tabId === "graficos") atualizarGrafico();
 }
 
-function excluir(index){
-  lancamentos.splice(index,1);
-  localStorage.setItem('lancamentos',JSON.stringify(lancamentos));
-  atualizarTabela(); atualizarResumo(); carregarGraficos();
-}
-
-function carregarGraficos(){
-  const ctxPizza = document.getElementById('graficoPizza').getContext('2d');
-  const ctxLinha = document.getElementById('graficoLinha').getContext('2d');
-  const totalReceitas = lancamentos.filter(l=>l.tipo==='receita').reduce((a,b)=>a+b.valor,0);
-  const totalDespesas = lancamentos.filter(l=>l.tipo==='despesa').reduce((a,b)=>a+b.valor,0);
-
-  if(graficoPizza) graficoPizza.destroy();
-  graficoPizza = new Chart(ctxPizza,{
-    type:'pie',
-    data:{labels:['Receitas','Despesas'],datasets:[{data:[totalReceitas,totalDespesas],backgroundColor:['#2ecc71','#e74c3c']}]},
-    options:{responsive:true, maintainAspectRatio:false}
-  });
-
-  const meses={};
-  lancamentos.forEach(l=>{
-    const m = l.data.slice(0,7);
-    if(!meses[m]) meses[m]={receitas:0,despesas:0};
-    l.tipo==='receita'?meses[m].receitas+=l.valor:meses[m].despesas+=l.valor;
-  });
-
-  if(graficoLinha) graficoLinha.destroy();
-  graficoLinha = new Chart(ctxLinha,{
-    type:'line',
-    data:{
-      labels:Object.keys(meses),
-      datasets:[
-        {label:'Receitas',data:Object.values(meses).map(m=>m.receitas),borderColor:'#2ecc71',fill:false},
-        {label:'Despesas',data:Object.values(meses).map(m=>m.despesas),borderColor:'#e74c3c',fill:false}
-      ]
-    },
-    options:{responsive:true, maintainAspectRatio:false}
-  });
-}
-
-// Inicializar
-atualizarTabela(); atualizarResumo(); carregarGraficos();
+atualizarTabela();
+atualizarRelatorios();

@@ -1,71 +1,73 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel Financeiro Responsivo</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <meta charset="UTF-8">
+    <title>Painel Financeiro</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<header><h1>Painel Financeiro</h1></header>
-
-<!-- Abas -->
-<div class="tabs">
-  <ul class="nav nav-tabs justify-content-center" id="tabs">
-    <li class="nav-item"><button class="nav-link active" onclick="showTab('lancamentos')">Lançamentos</button></li>
-    <li class="nav-item"><button class="nav-link" onclick="showTab('relatorio')">Relatório</button></li>
-  </ul>
-</div>
-
-<!-- Lançamentos -->
-<div id="lancamentos" class="tab-content mt-3">
-  <div class="card">
-    <h5>Adicionar Receita/Despesa</h5>
-    <div class="row g-2">
-      <div class="col-12 col-md-3"><input type="date" id="data" class="form-control"></div>
-      <div class="col-12 col-md-3">
-        <select id="tipo" class="form-select">
-          <option value="receita">Receita</option>
-          <option value="despesa">Despesa</option>
-        </select>
-      </div>
-      <div class="col-12 col-md-3">
-        <input type="text" id="categoria" placeholder="Categoria" class="form-control">
-      </div>
-      <div class="col-12 col-md-2"><input type="number" id="valor" step="0.01" placeholder="Valor R$" class="form-control"></div>
-      <div class="col-12 col-md-1 d-flex align-items-end"><button class="btn btn-success w-100" onclick="adicionarLancamento()">➕</button></div>
+    <div class="navbar">
+        <button onclick="showTab('lancamentos')">Lançamentos</button>
+        <button onclick="showTab('relatorios')">Relatórios</button>
+        <button onclick="showTab('graficos')">Gráficos</button>
     </div>
-  </div>
 
-  <div class="cards mt-3">
-    <div class="card"><h2>Receitas</h2><p id="totalReceitas">R$ 0,00</p></div>
-    <div class="card"><h2>Despesas</h2><p id="totalDespesas">R$ 0,00</p></div>
-    <div class="card"><h2>Saldo</h2><p id="saldo">R$ 0,00</p></div>
-  </div>
+    <!-- Aba Lançamentos -->
+    <div id="lancamentos" class="tab active">
+        <h2>Lançamentos</h2>
+        <form id="form-lancamento">
+            <input type="date" id="data" required>
+            <input type="text" id="descricao" placeholder="Descrição" required>
+            <input type="number" id="valor" placeholder="Valor (R$)" required>
+            <select id="tipo">
+                <option value="entrada">Entrada</option>
+                <option value="saida">Saída</option>
+            </select>
+            <button type="submit">Adicionar</button>
+        </form>
+        <table id="tabela-lancamentos">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Descrição</th>
+                    <th>Valor (R$)</th>
+                    <th>Tipo</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
-  <div class="relatorio mt-3">
-    <h5>Lançamentos Realizados</h5>
-    <table>
-      <thead>
-        <tr><th>Data</th><th>Tipo</th><th>Categoria</th><th>Valor</th><th>Ação</th></tr>
-      </thead>
-      <tbody id="tabela"></tbody>
-    </table>
-  </div>
-</div>
+    <!-- Aba Relatórios -->
+    <div id="relatorios" class="tab">
+        <h2>Relatórios</h2>
+        <div class="cards">
+            <div class="card verde">
+                <h3>Total Entradas</h3>
+                <p id="total-entradas">R$ 0,00</p>
+            </div>
+            <div class="card vermelho">
+                <h3>Total Saídas</h3>
+                <p id="total-saidas">R$ 0,00</p>
+            </div>
+            <div class="card azul">
+                <h3>Saldo Atual</h3>
+                <p id="saldo-atual">R$ 0,00</p>
+            </div>
+            <div class="card cinza">
+                <h3>Lançamentos</h3>
+                <p id="qtd-lancamentos">0</p>
+            </div>
+        </div>
+    </div>
 
-<!-- Relatório -->
-<div id="relatorio" class="tab-content mt-3" style="display:none;">
-  <div class="chart-container">
-    <h5>Gráficos</h5>
-    <canvas id="graficoPizza"></canvas>
-    <canvas id="graficoLinha" class="mt-3"></canvas>
-  </div>
-</div>
+    <!-- Aba Gráficos -->
+    <div id="graficos" class="tab">
+        <h2>Gráficos</h2>
+        <canvas id="grafico"></canvas>
+    </div>
 
-<script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

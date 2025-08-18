@@ -1,19 +1,68 @@
-body { background: #f4f6f9; font-family: Arial, sans-serif; }
-header { background: #1e3c72; color: white; text-align: center; padding: 15px 0; }
-.tabs { margin: 15px; }
-.cards { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin: 15px; }
-.card { flex: 1 1 200px; min-width: 200px; text-align: center; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); background: white; }
-.card h2 { margin: 0; font-size: 1.1em; color: #555; }
-.card p { font-size: 1.4em; font-weight: bold; margin: 10px 0 0; }
-.charts { display: flex; flex-wrap: wrap; gap: 15px; margin: 15px; justify-content: center; }
-.chart-container { flex: 1 1 300px; min-width: 300px; background: white; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-.relatorio { background: white; margin: 15px; padding: 15px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); overflow-x: auto; }
-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-th, td { padding: 8px; text-align: left; border-bottom: 1px solid #ddd; font-size: 0.9em; }
-th { background: #1e3c72; color: white; }
-.form-control, .form-select { font-size: 0.9em; }
-.btn { font-size: 0.9em; }
-@media (max-width: 576px) {
-  .cards, .charts { flex-direction: column; gap: 10px; }
-  .chart-container { min-width: 100%; }
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f5f7fa;
+    color: #333;
 }
+.navbar {
+    display: flex;
+    background: #222;
+    padding: 10px;
+    justify-content: center;
+}
+.navbar button {
+    background: #444;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    margin: 0 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+.navbar button:hover {
+    background: #666;
+}
+.tab {
+    display: none;
+    padding: 20px;
+}
+.tab.active {
+    display: block;
+}
+form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+input, select, button {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+.cards {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.card {
+    flex: 1;
+    min-width: 200px;
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+}
+.card.verde { background: #28a745; }
+.card.vermelho { background: #dc3545; }
+.card.azul { background: #007bff; }
+.card.cinza { background: #6c757d; }
