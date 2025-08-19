@@ -1,68 +1,45 @@
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background: #f5f7fa;
-    color: #333;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f4f6f9;
+  color: #333;
 }
 .navbar {
-    display: flex;
-    background: #222;
-    padding: 10px;
-    justify-content: center;
+  background: #222;
+  color: white;
+  display: flex;
+  padding: 10px;
+  gap: 10px;
 }
 .navbar button {
-    background: #444;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    margin: 0 5px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background 0.3s;
+  background: #444;
+  border: none;
+  padding: 10px 20px;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
 }
 .navbar button:hover {
-    background: #666;
+  background: #666;
 }
-.tab {
-    display: none;
-    padding: 20px;
+.aba {
+  display: none;
+  padding: 20px;
 }
-.tab.active {
-    display: block;
-}
-form {
-    display: flex;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-input, select, button {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+.aba.ativa {
+  display: block;
 }
 table {
-    width: 100%;
-    border-collapse: collapse;
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
 }
 th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: center;
 }
-.cards {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
+th {
+  background: #eee;
 }
-.card {
-    flex: 1;
-    min-width: 200px;
-    padding: 20px;
-    border-radius: 10px;
-    color: white;
-    text-align: center;
-}
-.card.verde { background: #28a745; }
-.card.vermelho { background: #dc3545; }
-.card.azul { background: #007bff; }
-.card.cinza { background: #6c757d; }

@@ -1,66 +1,66 @@
 let lancamentos = JSON.parse(localStorage.getItem("lancamentos")) || [];
 
-document.getElementById("form-lancamento").addEventListener("submit", function(e) {
-    e.preventDefault();
-    const data = document.getElementById("data").value;
-    const descricao = document.getElementById("descricao").value;
-    const valor = parseFloat(document.getElementById("valor").value);
-    const tipo = document.getElementById("tipo").value;
+function abrirAba(nome) {
+  document.querySelectorAll(".aba").forEach(div => div.classList.remove("ativa"));
+  document.getElementById(nome).classList.add("ativa");
+}
 
-    lancamentos.push({ data, descricao, valor, tipo });
-    localStorage.setItem("lancamentos", JSON.stringify(lancamentos));
-    atualizarTabela();
-    atualizarRelatorios();
-    atualizarGrafico();
-    this.reset();
+document.getElementById("formLancamento").addEventListener("submit", e => {
+  e.preventDefault();
+  const data = document.getElementById("data").value;
+  const descricao = document.getElementById("descricao").value;
+  const valor = parseFloat(document.getElementById("valor").value);
+  const tipo = document.getElementById("tipo").value;
+
+  const lancamento = { data, descricao, valor, tipo };
+  lancamentos.push(lancamento);
+  localStorage.setItem("lancamentos", JSON.stringify(lancamentos));
+  atualizarTabela();
+  atualizarResumo();
+  atualizarGrafico();
+  e.target.reset();
 });
 
 function atualizarTabela() {
-    const tbody = document.querySelector("#tabela-lancamentos tbody");
-    tbody.innerHTML = "";
-    lancamentos.forEach(l => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `<td>${l.data}</td><td>${l.descricao}</td><td>R$ ${l.valor.toFixed(2)}</td><td>${l.tipo}</td>`;
-        tbody.appendChild(tr);
-    });
+  const tbody = document.querySelector("#tabelaLancamentos tbody");
+  tbody.innerHTML = "";
+  lancamentos.forEach(l => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${l.data}</td><td>${l.descricao}</td><td>R$ ${l.valor.toFixed(2)}</td><td>${l.tipo}</td>`;
+    tbody.appendChild(tr);
+  });
 }
 
-function atualizarRelatorios() {
-    const totalEntradas = lancamentos.filter(l => l.tipo === "entrada").reduce((acc, l) => acc + l.valor, 0);
-    const totalSaidas = lancamentos.filter(l => l.tipo === "saida").reduce((acc, l) => acc + l.valor, 0);
-    const saldo = totalEntradas - totalSaidas;
+function atualizarResumo() {
+  let receitas = lancamentos.filter(l => l.tipo === "receita").reduce((acc, l) => acc + l.valor, 0);
+  let despesas = lancamentos.filter(l => l.tipo === "despesa").reduce((acc, l) => acc + l.valor, 0);
+  let saldo = receitas - despesas;
 
-    document.getElementById("total-entradas").textContent = "R$ " + totalEntradas.toFixed(2);
-    document.getElementById("total-saidas").textContent = "R$ " + totalSaidas.toFixed(2);
-    document.getElementById("saldo-atual").textContent = "R$ " + saldo.toFixed(2);
-    document.getElementById("qtd-lancamentos").textContent = lancamentos.length;
+  document.getElementById("resumo").innerHTML = `
+    <p><b>Total de Receitas:</b> R$ ${receitas.toFixed(2)}</p>
+    <p><b>Total de Despesas:</b> R$ ${despesas.toFixed(2)}</p>
+    <p><b>Saldo:</b> R$ ${saldo.toFixed(2)}</p>
+  `;
 }
 
-let grafico;
 function atualizarGrafico() {
-    const ctx = document.getElementById("grafico").getContext("2d");
-    const entradas = lancamentos.filter(l => l.tipo === "entrada").reduce((acc, l) => acc + l.valor, 0);
-    const saidas = lancamentos.filter(l => l.tipo === "saida").reduce((acc, l) => acc + l.valor, 0);
+  const ctx = document.getElementById("grafico").getContext("2d");
+  if (window.grafico) window.grafico.destroy();
+  let receitas = lancamentos.filter(l => l.tipo === "receita").reduce((acc, l) => acc + l.valor, 0);
+  let despesas = lancamentos.filter(l => l.tipo === "despesa").reduce((acc, l) => acc + l.valor, 0);
 
-    if (grafico) grafico.destroy();
-    grafico = new Chart(ctx, {
-        type: "doughnut",
-        data: {
-            labels: ["Entradas", "Saídas"],
-            datasets: [{
-                data: [entradas, saidas],
-                backgroundColor: ["#28a745", "#dc3545"]
-            }]
-        }
-    });
-}
-
-function showTab(tabId) {
-    document.querySelectorAll(".tab").forEach(tab => tab.classList.remove("active"));
-    document.getElementById(tabId).classList.add("active");
-    if (tabId === "relatorios") atualizarRelatorios();
-    if (tabId === "graficos") atualizarGrafico();
+  window.grafico = new Chart(ctx, {
+    type: "pie",
+    data: {
+      labels: ["Receitas", "Despesas"],
+      datasets: [{
+        data: [receitas, despesas],
+        backgroundColor: ["#4caf50", "#f44336"]
+      }]
+    }
+  });
 }
 
 atualizarTabela();
-atualizarRelatorios();
+atualizarResumo();
+atualizarGrafico();

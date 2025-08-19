@@ -1,73 +1,49 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <title>Painel Financeiro</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Financeiro</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="navbar">
-        <button onclick="showTab('lancamentos')">Lançamentos</button>
-        <button onclick="showTab('relatorios')">Relatórios</button>
-        <button onclick="showTab('graficos')">Gráficos</button>
-    </div>
+  <div class="navbar">
+    <button onclick="abrirAba('lancamentos')">Lançamentos</button>
+    <button onclick="abrirAba('relatorios')">Relatórios</button>
+    <button onclick="abrirAba('graficos')">Gráficos</button>
+  </div>
 
-    <!-- Aba Lançamentos -->
-    <div id="lancamentos" class="tab active">
-        <h2>Lançamentos</h2>
-        <form id="form-lancamento">
-            <input type="date" id="data" required>
-            <input type="text" id="descricao" placeholder="Descrição" required>
-            <input type="number" id="valor" placeholder="Valor (R$)" required>
-            <select id="tipo">
-                <option value="entrada">Entrada</option>
-                <option value="saida">Saída</option>
-            </select>
-            <button type="submit">Adicionar</button>
-        </form>
-        <table id="tabela-lancamentos">
-            <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Descrição</th>
-                    <th>Valor (R$)</th>
-                    <th>Tipo</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-    </div>
+  <div id="lancamentos" class="aba ativa">
+    <h2>Lançamentos</h2>
+    <form id="formLancamento">
+      <input type="date" id="data" required>
+      <input type="text" id="descricao" placeholder="Descrição" required>
+      <input type="number" id="valor" placeholder="Valor" required>
+      <select id="tipo">
+        <option value="receita">Receita</option>
+        <option value="despesa">Despesa</option>
+      </select>
+      <button type="submit">Adicionar</button>
+    </form>
+    <table id="tabelaLancamentos">
+      <thead>
+        <tr><th>Data</th><th>Descrição</th><th>Valor</th><th>Tipo</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
 
-    <!-- Aba Relatórios -->
-    <div id="relatorios" class="tab">
-        <h2>Relatórios</h2>
-        <div class="cards">
-            <div class="card verde">
-                <h3>Total Entradas</h3>
-                <p id="total-entradas">R$ 0,00</p>
-            </div>
-            <div class="card vermelho">
-                <h3>Total Saídas</h3>
-                <p id="total-saidas">R$ 0,00</p>
-            </div>
-            <div class="card azul">
-                <h3>Saldo Atual</h3>
-                <p id="saldo-atual">R$ 0,00</p>
-            </div>
-            <div class="card cinza">
-                <h3>Lançamentos</h3>
-                <p id="qtd-lancamentos">0</p>
-            </div>
-        </div>
-    </div>
+  <div id="relatorios" class="aba">
+    <h2>Relatórios</h2>
+    <div id="resumo"></div>
+  </div>
 
-    <!-- Aba Gráficos -->
-    <div id="graficos" class="tab">
-        <h2>Gráficos</h2>
-        <canvas id="grafico"></canvas>
-    </div>
+  <div id="graficos" class="aba">
+    <h2>Gráficos</h2>
+    <canvas id="grafico"></canvas>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
