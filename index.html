@@ -5,45 +5,81 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Painel Financeiro</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="navbar">
-    <button onclick="abrirAba('lancamentos')">Lançamentos</button>
-    <button onclick="abrirAba('relatorios')">Relatórios</button>
-    <button onclick="abrirAba('graficos')">Gráficos</button>
-  </div>
+  <header>
+    <h1>Painel Financeiro</h1>
+    <nav>
+      <button class="tab-btn active" data-tab="lancamentos">Lançamentos</button>
+      <button class="tab-btn" data-tab="relatorios">Relatórios</button>
+      <button class="tab-btn" data-tab="graficos">Gráficos</button>
+    </nav>
+  </header>
 
-  <div id="lancamentos" class="aba ativa">
-    <h2>Lançamentos</h2>
-    <form id="formLancamento">
-      <input type="date" id="data" required>
-      <input type="text" id="descricao" placeholder="Descrição" required>
-      <input type="number" id="valor" placeholder="Valor" required>
-      <select id="tipo">
-        <option value="receita">Receita</option>
-        <option value="despesa">Despesa</option>
-      </select>
-      <button type="submit">Adicionar</button>
-    </form>
-    <table id="tabelaLancamentos">
-      <thead>
-        <tr><th>Data</th><th>Descrição</th><th>Valor</th><th>Tipo</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-  </div>
+  <main>
+    <!-- Aba Lançamentos -->
+    <section id="lancamentos" class="tab-content active">
+      <h2>Novo Lançamento</h2>
+      <form id="formLancamento">
+        <input type="date" id="data" required>
+        <select id="descricao" required>
+          <option value="">Selecione</option>
+          <option>Salário</option>
+          <option>Aluguel</option>
+          <option>Pensão Alimenticia</option>
+          <option>Luz</option>
+          <option>Água</option>
+          <option>Internet</option>
+          <option>Streamer</option>
+          <option>Viagens</option>
+          <option>Lazer</option>
+          <option value="manual">Outro...</option>
+        </select>
+        <input type="text" id="descricaoManual" placeholder="Digite a descrição" style="display:none;">
+        <input type="number" id="valor" placeholder="Valor (R$)" required>
+        <select id="tipo" required>
+          <option value="receita">Receita</option>
+          <option value="despesa">Despesa</option>
+        </select>
+        <button type="submit">Adicionar</button>
+      </form>
 
-  <div id="relatorios" class="aba">
-    <h2>Relatórios</h2>
-    <div id="resumo"></div>
-  </div>
+      <h2>Lançamentos</h2>
+      <table id="tabelaLancamentos">
+        <thead>
+          <tr>
+            <th>Data</th>
+            <th>Descrição</th>
+            <th>Valor (R$)</th>
+            <th>Tipo</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
 
-  <div id="graficos" class="aba">
-    <h2>Gráficos</h2>
-    <canvas id="grafico"></canvas>
-  </div>
+    <!-- Aba Relatórios -->
+    <section id="relatorios" class="tab-content">
+      <h2>Relatórios</h2>
+      <div class="cards">
+        <div class="card receita">Receitas: R$ <span id="totalReceitas">0</span></div>
+        <div class="card despesa">Despesas: R$ <span id="totalDespesas">0</span></div>
+        <div class="card saldo">Saldo: R$ <span id="saldo">0</span></div>
+      </div>
+      <button id="exportExcel">Exportar Excel</button>
+      <button id="exportPDF">Exportar PDF</button>
+    </section>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Aba Gráficos -->
+    <section id="graficos" class="tab-content">
+      <h2>Gráficos</h2>
+      <canvas id="graficoPizza"></canvas>
+      <canvas id="graficoLinha"></canvas>
+    </section>
+  </main>
+
   <script src="script.js"></script>
 </body>
 </html>
